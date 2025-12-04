@@ -1,0 +1,102 @@
+require "./spec_helper"
+
+describe "MailCatcher Quit" do
+  describe "DELETE / (quit via API)" do
+    it "quits cleanly via the API" do
+      mailcatcher = MailCatcherProcess.new
+      mailcatcher.start
+
+      # Process should be running
+      mailcatcher.running?.should be_true
+
+      # Quit via API
+      api = ApiClient.new
+      response = api.quit
+      response.status_code.should eq(204)
+
+      # Wait for process to exit (quit spawns a fiber that waits before exit)
+      sleep 2
+
+      # Process should have exited
+      mailcatcher.running?.should be_false
+    end
+
+    it "returns 403 when --no-quit is set" do
+      # Start with custom args including --no-quit
+      process = Process.new(MAILCATCHER_BIN, [
+        "--foreground",
+        "--smtp-ip", LOCALHOST,
+        "--smtp-port", SMTP_PORT.to_s,
+        "--http-ip", LOCALHOST,
+        "--http-port", HTTP_PORT.to_s,
+        "--no-quit",
+      ])
+
+      # Wait for it to boot
+      sleep 1
+
+      begin
+        # Try to quit via API
+        api = ApiClient.new
+        response = api.quit
+        response.status_code.should eq(403)
+        response.body.should contain("Quit is disabled")
+
+        # Process should still be running
+        process.exists?.should be_true
+      ensure
+        # Clean up
+        begin
+          process.signal(Signal::TERM)
+          sleep 0.3
+        rescue RuntimeError
+          # Already exited
+        end
+      end
+    end
+  end
+
+  describe "SIGINT (Ctrl+C)" do
+    it "quits cleanly on SIGINT" do
+      mailcatcher = MailCatcherProcess.new
+      mailcatcher.start
+
+      # Process should be running
+      mailcatcher.running?.should be_true
+
+      # Get the process
+      process = mailcatcher.process.not_nil!
+
+      # Send SIGINT
+      process.signal(Signal::INT)
+
+      # Wait for process to exit
+      sleep 0.5
+
+      # Process should have exited
+      mailcatcher.running?.should be_false
+    end
+  end
+
+  describe "SIGTERM" do
+    it "quits cleanly on SIGTERM" do
+      mailcatcher = MailCatcherProcess.new
+      mailcatcher.start
+
+      # Process should be running
+      mailcatcher.running?.should be_true
+
+      # Get the process
+      process = mailcatcher.process.not_nil!
+
+      # Send SIGTERM
+      process.signal(Signal::TERM)
+
+      # Wait for process to exit (quit spawns a fiber that waits before exit)
+      sleep 2
+
+      # Process should have exited
+      mailcatcher.running?.should be_false
+    end
+  end
+end
