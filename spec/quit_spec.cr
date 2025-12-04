@@ -22,33 +22,53 @@ describe "MailCatcher Quit" do
     end
 
     it "returns 403 when --no-quit is set" do
+      # Use a different port to avoid conflict with previous test
+      no_quit_http_port = HTTP_PORT + 100
+      no_quit_smtp_port = SMTP_PORT + 100
+
       # Start with custom args including --no-quit
       process = Process.new(MAILCATCHER_BIN, [
         "--foreground",
         "--smtp-ip", LOCALHOST,
-        "--smtp-port", SMTP_PORT.to_s,
+        "--smtp-port", no_quit_smtp_port.to_s,
         "--http-ip", LOCALHOST,
-        "--http-port", HTTP_PORT.to_s,
+        "--http-port", no_quit_http_port.to_s,
         "--no-quit",
       ])
 
-      # Wait for it to boot
-      sleep 1
+      # Wait for it to boot (poll for port)
+      deadline = Time.monotonic + 10.seconds
+      loop do
+        begin
+          socket = TCPSocket.new(LOCALHOST, no_quit_http_port, connect_timeout: 1.second)
+          socket.close
+          break
+        rescue Socket::ConnectError | IO::TimeoutError
+          if Time.monotonic > deadline
+            raise "Timeout waiting for server to start"
+          end
+          sleep 0.1
+        end
+      end
 
       begin
         # Try to quit via API
-        api = ApiClient.new
+        api = ApiClient.new("http://#{LOCALHOST}:#{no_quit_http_port}")
         response = api.quit
         response.status_code.should eq(403)
         response.body.should contain("Quit is disabled")
 
         # Process should still be running
-        process.exists?.should be_true
+        process.terminated?.should be_false
       ensure
         # Clean up
         begin
           process.signal(Signal::TERM)
-          sleep 0.3
+          # Wait for termination
+          50.times do
+            break if process.terminated?
+            sleep 0.1
+          end
         rescue RuntimeError
           # Already exited
         end

@@ -195,6 +195,9 @@ module MailCatcher
       # Split by boundary
       sections = body.split(delimiter)
 
+      # Skip the first section (preamble before the first boundary)
+      sections = sections[1..] if sections.size > 1
+
       sections.each do |section|
         # Skip preamble and epilogue
         next if section.strip.empty?
