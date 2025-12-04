@@ -1,0 +1,25 @@
+name: mailcatcher
+version: 0.10.0
+
+authors:
+  - Crystal port of MailCatcher by Samuel Cochran
+
+description: |
+  MailCatcher runs a super simple SMTP server which catches any
+  message sent to it to display in a web interface.
+
+targets:
+  mailcatcher:
+    main: src/mailcatcher.cr
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+    version: ~> 1.8.0
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+    version: ~> 0.22.0
+
+crystal: ">= 1.10.0"
+
+license: MIT

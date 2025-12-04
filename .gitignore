@@ -1,0 +1,15 @@
+# Dependencies
+/lib/
+
+# Build outputs
+/bin/
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
