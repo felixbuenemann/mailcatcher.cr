@@ -52,7 +52,7 @@ class MailCatcherProcess
         process.signal(Signal::TERM)
         # Wait for process to exit with timeout
         100.times do
-          break unless process.exists?
+          break if process.terminated?
           sleep 0.05
         end
       rescue RuntimeError
@@ -64,7 +64,7 @@ class MailCatcherProcess
 
   def running? : Bool
     if process = @process
-      process.exists?
+      !process.terminated?
     else
       false
     end

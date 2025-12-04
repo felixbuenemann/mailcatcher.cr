@@ -16,7 +16,7 @@ describe "MailCatcher Command" do
       output = `#{MAILCATCHER_BIN} --help 2>&1`
       status = $?
 
-      output.should contain("MailCatcher v")
+      output.should contain("Usage:")
       output.should contain("--help")
       output.should contain("Display this help")
       status.success?.should be_true
