@@ -1,5 +1,8 @@
 name: Build and upload MailCatcher binaries
 
+permissions:
+  contents: write # needed so action-gh-release can update the release
+
 on:
   release:
     types: [published]
@@ -53,7 +56,7 @@ jobs:
               --static \
               -o dist/mailcatcher-${{ matrix.target }}
 
-      - name: Install Crystal
+      - name: Install Crystal (macOS/Windows)
         if: runner.os != 'Linux'
         uses: crystal-lang/install-crystal@v1
         with:
