@@ -19,7 +19,6 @@ describe "MailCatcher Clear" do
       deliver_example("plainmail", smtp)
       deliver_example("plainmail", smtp)
       deliver_example("plainmail", smtp)
-      sleep 0.3.seconds
 
       # Should have three messages
       messages = api.messages
@@ -41,7 +40,6 @@ describe "MailCatcher Clear" do
       deliver_example("plainmail", smtp)
       deliver_example("htmlmail", smtp)
       deliver_example("multipartmail", smtp)
-      sleep 0.3.seconds
 
       # Should have three messages
       messages = api.messages

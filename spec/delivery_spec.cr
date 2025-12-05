@@ -16,7 +16,6 @@ describe "MailCatcher Delivery" do
   describe "plain text message" do
     it "catches and stores a plain text message" do
       deliver_example("plainmail", smtp)
-      sleep 0.2.seconds # Allow processing
 
       messages = api.messages
       messages.size.should eq(1)
@@ -27,7 +26,6 @@ describe "MailCatcher Delivery" do
 
     it "returns the plain text body" do
       deliver_example("plainmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       messages.size.should eq(1)
@@ -39,7 +37,6 @@ describe "MailCatcher Delivery" do
 
     it "returns the source" do
       deliver_example("plainmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       id = messages[0]["id"].as_i64
@@ -51,7 +48,6 @@ describe "MailCatcher Delivery" do
 
     it "shows plain format but not html format" do
       deliver_example("plainmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       id = messages[0]["id"].as_i64
@@ -67,7 +63,6 @@ describe "MailCatcher Delivery" do
   describe "HTML message" do
     it "catches and stores an HTML message" do
       deliver_example("htmlmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       messages.size.should eq(1)
@@ -78,7 +73,6 @@ describe "MailCatcher Delivery" do
 
     it "returns the HTML body" do
       deliver_example("htmlmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       id = messages[0]["id"].as_i64
@@ -90,7 +84,6 @@ describe "MailCatcher Delivery" do
 
     it "shows html format but not plain format" do
       deliver_example("htmlmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       id = messages[0]["id"].as_i64
@@ -106,7 +99,6 @@ describe "MailCatcher Delivery" do
   describe "multipart message" do
     it "catches and stores a multipart message" do
       deliver_example("multipartmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       messages.size.should eq(1)
@@ -117,7 +109,6 @@ describe "MailCatcher Delivery" do
 
     it "returns both plain and HTML parts" do
       deliver_example("multipartmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       id = messages[0]["id"].as_i64
@@ -132,7 +123,6 @@ describe "MailCatcher Delivery" do
 
     it "shows both html and plain formats" do
       deliver_example("multipartmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       id = messages[0]["id"].as_i64
@@ -148,7 +138,6 @@ describe "MailCatcher Delivery" do
   describe "multipart UTF-8 message" do
     it "handles UTF-8 content correctly" do
       deliver_example("multipartmail-with-utf8", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       messages.size.should eq(1)
@@ -163,7 +152,6 @@ describe "MailCatcher Delivery" do
   describe "message with attachments" do
     it "catches and stores a message with attachments" do
       deliver_example("attachmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       messages.size.should eq(1)
@@ -174,7 +162,6 @@ describe "MailCatcher Delivery" do
 
     it "lists attachments in the message JSON" do
       deliver_example("attachmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       id = messages[0]["id"].as_i64
@@ -187,7 +174,6 @@ describe "MailCatcher Delivery" do
 
     it "returns the plain text body" do
       deliver_example("attachmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       id = messages[0]["id"].as_i64
@@ -198,7 +184,6 @@ describe "MailCatcher Delivery" do
 
     it "allows downloading attachments by CID" do
       deliver_example("attachmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       id = messages[0]["id"].as_i64
@@ -216,7 +201,6 @@ describe "MailCatcher Delivery" do
   describe "message with dots" do
     it "handles dot-stuffing correctly" do
       deliver_example("dotmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       messages.size.should eq(1)
@@ -233,7 +217,6 @@ describe "MailCatcher Delivery" do
   describe "quoted-printable message" do
     it "decodes quoted-printable content" do
       deliver_example("quoted_printable_htmlmail", smtp)
-      sleep 0.2.seconds
 
       messages = api.messages
       messages.size.should eq(1)
@@ -254,7 +237,6 @@ describe "MailCatcher Delivery" do
       deliver_example("plainmail", smtp)
       deliver_example("htmlmail", smtp)
       deliver_example("multipartmail", smtp)
-      sleep 0.3.seconds
 
       messages = api.messages
       messages.size.should eq(3)
