@@ -13,3 +13,6 @@
 
 # macOS
 .DS_Store
+
+# Dist folder for CI builds
+/dist/
