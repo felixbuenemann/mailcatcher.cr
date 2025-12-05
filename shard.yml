@@ -16,9 +16,6 @@ dependencies:
   kemal:
     github: kemalcr/kemal
     version: ~> 1.8.0
-  sqlite3:
-    github: crystal-lang/crystal-sqlite3
-    version: ~> 0.22.0
 
 crystal: ">= 1.10.0"
 
