@@ -40,7 +40,7 @@ jobs:
         if: runner.os == 'Linux'
         uses: addnab/docker-run-action@v3
         with:
-          image: crystallang/crystal:1.18-alpine
+          image: felixbuenemann/crystal:1.18
           options: >
             -v ${{ github.workspace }}:/work
             -w /work
