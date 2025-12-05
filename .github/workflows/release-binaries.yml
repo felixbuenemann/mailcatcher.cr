@@ -55,6 +55,7 @@ jobs:
               --release \
               --static \
               -o dist/mailcatcher-${{ matrix.target }}
+            upx --best --lzma dist/mailcatcher-${{ matrix.target }}
 
       - name: Install Crystal (macOS/Windows)
         if: runner.os != 'Linux'
