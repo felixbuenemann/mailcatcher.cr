@@ -45,10 +45,6 @@ crystal build src/mailcatcher.cr -o bin/mailcatcher --release
 
 The `--release` flag enables optimizations for a smaller, faster binary.
 
-### Binary Size
-
-The release binary is approximately 8MB with all assets embedded.
-
 ## Usage
 
 ```bash
@@ -58,6 +54,12 @@ The release binary is approximately 8MB with all assets embedded.
 Then:
 1. Go to http://127.0.0.1:1080/
 2. Send mail through smtp://127.0.0.1:1025
+
+## Docker Usage
+
+```bash
+docker run --rm -it -p 1080:1080 -p 1025:1025 felixbuenemann/mailcatcher.cr
+```
 
 ### Command Line Options
 
