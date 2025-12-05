@@ -14,6 +14,7 @@ require "./mailcatcher/mime_parser"
 require "./mailcatcher/mail"
 require "./mailcatcher/smtp"
 require "./mailcatcher/web/server"
+require "./mailcatcher/catchmail"
 
 module MailCatcher
   extend self
@@ -150,5 +151,11 @@ module MailCatcher
   end
 end
 
-# Main entry point
-MailCatcher.run
+# Main entry point - detect if running as catchmail
+if File.basename(PROGRAM_NAME).starts_with?("catchmail")
+  MailCatcher::CatchMail.run
+elsif ARGV.first? == "catchmail"
+  MailCatcher::CatchMail.run(ARGV[1..])
+else
+  MailCatcher.run
+end

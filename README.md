@@ -113,7 +113,17 @@ if DEBUG:
 sendmail_path = /usr/bin/env catchmail -f some@from.address
 ```
 
-Note: The `catchmail` command is not included in this Crystal port. Use a simple script or configure your app to send directly to the SMTP server.
+Create a symlink to enable the `catchmail` command:
+
+```bash
+ln -s mailcatcher /usr/local/bin/catchmail
+```
+
+Alternatively, use `mailcatcher catchmail` directly (useful on Windows):
+
+```bash
+mailcatcher catchmail -f some@from.address
+```
 
 ### Node.js (Nodemailer)
 
@@ -131,7 +141,6 @@ A RESTful URL schema means you can download a list of messages in JSON from `/me
 
 ## Differences from Ruby Version
 
-* No `catchmail` sendmail replacement command (configure apps to use SMTP directly)
 * No daemon mode on Windows (uses Unix `daemon()` syscall)
 * In-memory message storage uses a hash instead of a SQLite database
 * Does not depend on any JavaScript libraries like jQuery
