@@ -15,7 +15,7 @@ describe "MailCatcher Quit" do
       response.status_code.should eq(204)
 
       # Wait for process to exit (quit spawns a fiber that waits before exit)
-      sleep 2
+      sleep 2.seconds
 
       # Process should have exited
       mailcatcher.running?.should be_false
@@ -47,7 +47,7 @@ describe "MailCatcher Quit" do
           if Time.monotonic > deadline
             raise "Timeout waiting for server to start"
           end
-          sleep 0.1
+          sleep 0.1.seconds
         end
       end
 
@@ -67,7 +67,7 @@ describe "MailCatcher Quit" do
           # Wait for termination
           50.times do
             break if process.terminated?
-            sleep 0.1
+            sleep 0.1.seconds
           end
         rescue RuntimeError
           # Already exited
@@ -91,7 +91,7 @@ describe "MailCatcher Quit" do
       process.signal(Signal::INT)
 
       # Wait for process to exit
-      sleep 0.5
+      sleep 0.5.seconds
 
       # Process should have exited
       mailcatcher.running?.should be_false
@@ -113,7 +113,7 @@ describe "MailCatcher Quit" do
       process.signal(Signal::TERM)
 
       # Wait for process to exit (quit spawns a fiber that waits before exit)
-      sleep 2
+      sleep 2.seconds
 
       # Process should have exited
       mailcatcher.running?.should be_false

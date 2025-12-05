@@ -53,7 +53,7 @@ class MailCatcherProcess
         # Wait for process to exit with timeout
         100.times do
           break if process.terminated?
-          sleep 0.05
+          sleep 0.05.seconds
         end
       rescue RuntimeError
         # Process already exited
@@ -81,7 +81,7 @@ class MailCatcherProcess
         if Time.monotonic > deadline
           raise "Timeout waiting for port #{port}"
         end
-        sleep 0.1
+        sleep 0.1.seconds
       end
     end
   end
