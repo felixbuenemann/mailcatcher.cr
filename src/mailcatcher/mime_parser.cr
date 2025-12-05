@@ -326,19 +326,19 @@ module MailCatcher
     end
 
     private def decode_body(body : String, encoding : String?) : Bytes
-      return body.to_slice unless encoding
+      return body.to_slice.dup unless encoding
 
       case encoding.downcase.strip
       when "base64"
         begin
           Base64.decode(body.gsub(/\s/, ""))
         rescue
-          body.to_slice
+          body.to_slice.dup
         end
       when "quoted-printable"
         decode_quoted_printable(body)
       else
-        body.to_slice
+        body.to_slice.dup
       end
     end
 
