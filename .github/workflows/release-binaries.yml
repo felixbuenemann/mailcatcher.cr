@@ -54,6 +54,7 @@ jobs:
             crystal build src/mailcatcher.cr \
               --release \
               --static \
+              --link-flags="-s" \
               -o dist/mailcatcher-${{ matrix.target }}
             upx --best --lzma dist/mailcatcher-${{ matrix.target }}
 
