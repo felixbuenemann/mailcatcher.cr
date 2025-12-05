@@ -1,0 +1,98 @@
+name: Build and upload MailCatcher binaries
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux: musl static builds
+          - os: ubuntu-24.04
+            target: linux-x86_64-musl
+          - os: ubuntu-24.04-arm
+            target: linux-aarch64-musl
+
+          # macOS: native builds
+          - os: macos-15
+            target: macos-aarch64
+          - os: macos-15-intel
+            target: macos-x86_64
+
+          # Windows: native builds
+          - os: windows-2025
+            target: windows-x86_64
+          - os: windows-11-arm
+            target: windows-aarch64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Linux musl binary
+        if: runner.os == 'Linux'
+        uses: addnab/docker-run-action@v3
+        with:
+          image: crystallang/crystal:1.18-alpine
+          options: >
+            -v ${{ github.workspace }}:/work
+            -w /work
+          run: |
+            set -eu
+            shards install --production
+            mkdir -p dist
+            crystal build src/mailcatcher.cr \
+              --release \
+              --static \
+              -o dist/mailcatcher-${{ matrix.target }}
+
+      - name: Install Crystal
+        if: runner.os != 'Linux'
+        uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: "1.18"
+
+      - name: Install shards (macOS/Windows)
+        if: runner.os != 'Linux'
+        shell: bash
+        run: shards install --production
+
+      - name: Build native binary (macOS/Windows)
+        if: runner.os != 'Linux'
+        shell: bash
+        run: |
+          set -eu
+          mkdir -p dist
+          BIN="mailcatcher-${{ matrix.target }}"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            BIN="${BIN}.exe"
+          fi
+          crystal build src/mailcatcher.cr \
+            --release \
+            -o "dist/${BIN}"
+
+      - name: Determine asset name
+        id: meta
+        shell: bash
+        run: |
+          ASSET="mailcatcher-${{ matrix.target }}"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ASSET="${ASSET}.exe"
+          fi
+          echo "asset=${ASSET}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload asset to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/${{ steps.meta.outputs.asset }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
