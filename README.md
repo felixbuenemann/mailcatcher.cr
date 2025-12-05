@@ -133,7 +133,9 @@ A RESTful URL schema means you can download a list of messages in JSON from `/me
 
 * No `catchmail` sendmail replacement command (configure apps to use SMTP directly)
 * No daemon mode on Windows (uses Unix `daemon()` syscall)
-* In-memory SQLite database only (messages are lost on restart)
+* In-memory message storage uses a hash instead of a SQLite database
+* Does not depend on any JavaScript libraries like jQuery
+* Uses plain CSS instead of SCSS for styles
 
 ## Credits
 
