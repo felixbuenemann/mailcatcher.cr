@@ -14,6 +14,7 @@ This is a standalone binary port of the Ruby MailCatcher gem. Benefits:
 * **Fast startup** — native compiled binary starts instantly
 * **Low memory** — typically uses less memory than the Ruby version
 * **Easy distribution** — just copy the binary
+* **No conflicts** - does not conflict with other gems in your Ruby project
 
 ## Features
 
@@ -32,8 +33,7 @@ This is a standalone binary port of the Ruby MailCatcher gem. Benefits:
 
 ### Requirements
 
-* [Crystal](https://crystal-lang.org/install/) >= 1.10.0
-* SQLite3 development libraries (`brew install sqlite3` on macOS, `apt install libsqlite3-dev` on Debian/Ubuntu)
+* [Crystal](https://crystal-lang.org/install/) >= 1.18.0
 
 ### Build
 
