@@ -14,8 +14,11 @@ describe "MailCatcher Quit" do
       response = api.quit
       response.status_code.should eq(204)
 
-      # Wait for process to exit (quit spawns a fiber that waits before exit)
-      sleep 2.seconds
+      # Wait for process to exit
+      20.times do
+        break unless mailcatcher.running?
+        sleep 0.1.seconds
+      end
 
       # Process should have exited
       mailcatcher.running?.should be_false
@@ -91,7 +94,10 @@ describe "MailCatcher Quit" do
       process.signal(Signal::INT)
 
       # Wait for process to exit
-      sleep 0.5.seconds
+      20.times do
+        break unless mailcatcher.running?
+        sleep 0.1.seconds
+      end
 
       # Process should have exited
       mailcatcher.running?.should be_false
@@ -112,8 +118,11 @@ describe "MailCatcher Quit" do
       # Send SIGTERM
       process.signal(Signal::TERM)
 
-      # Wait for process to exit (quit spawns a fiber that waits before exit)
-      sleep 2.seconds
+      # Wait for process to exit
+      20.times do
+        break unless mailcatcher.running?
+        sleep 0.1.seconds
+      end
 
       # Process should have exited
       mailcatcher.running?.should be_false
