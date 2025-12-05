@@ -1,0 +1,7 @@
+/Dockerfile
+/.git
+/.github
+/.gitignore
+/bin/
+/build/
+/dist/
