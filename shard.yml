@@ -17,6 +17,6 @@ dependencies:
     github: kemalcr/kemal
     version: ~> 1.8.0
 
-crystal: ">= 1.10.0"
+crystal: ">= 1.18.0"
 
 license: MIT
