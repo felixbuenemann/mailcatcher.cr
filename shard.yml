@@ -1,5 +1,5 @@
 name: mailcatcher
-version: 0.10.0
+version: 0.11.0
 
 authors:
   - Crystal port of MailCatcher by Samuel Cochran
