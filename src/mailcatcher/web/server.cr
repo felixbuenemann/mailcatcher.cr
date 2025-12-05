@@ -246,7 +246,7 @@ module MailCatcher
         else
           env.response.content_type = content_type
         end
-        if part.is_attachment == 1 && part.filename
+        if part.is_attachment && part.filename
           env.response.headers["Content-Disposition"] = "attachment; filename=\"#{part.filename}\""
         end
         env.response.write part.body
